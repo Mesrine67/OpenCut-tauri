@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "OpenCut New",
+  "version": "0.1.0",
+  "identifier": "app.opencut.desktop.new",
+  "build": {
+    "beforeDevCommand": "bun run --cwd ../web dev:tauri",
+    "devUrl": "http://127.0.0.1:1420/",
+    "beforeBuildCommand": "bun run --cwd ../web build:tauri",
+    "frontendDist": "../../web/dist-tauri/client"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "OpenCut New · Preview",
+        "width": 1440,
+        "height": 920,
+        "minWidth": 1024,
+        "minHeight": 720,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost data: blob:; media-src 'self' asset: http://asset.localhost data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "offlineInstaller"
+      }
+    },
+    "icon": ["../../desktop-tauri/src-tauri/icons/icon.ico"],
+    "category": "Video",
+    "shortDescription": "OpenCut rewrite desktop preview"
+  }
+}

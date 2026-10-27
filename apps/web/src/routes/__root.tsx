@@ -16,7 +16,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'OpenCut rewrite | beta.opencut.app',
+        title: import.meta.env.MODE === 'tauri' ? 'OpenCut New | Desktop Preview' : 'OpenCut rewrite | beta.opencut.app',
       },
     ],
     links: [
@@ -25,19 +25,17 @@ export const Route = createRootRoute({
         href: '/favicon.ico',
         type: 'image/x-icon',
       },
-      {
+      ...(import.meta.env.MODE === 'tauri' ? [] : [{
         rel: 'preconnect',
         href: 'https://fonts.googleapis.com',
-      },
-      {
+      }, {
         rel: 'preconnect',
         href: 'https://fonts.gstatic.com',
         crossOrigin: 'anonymous',
-      },
-      {
+      }, {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap',
-      },
+      }]),
       {
         rel: 'stylesheet',
         href: appCss,
@@ -57,7 +55,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <TooltipProvider>
           {children}
         </TooltipProvider>
-        <TanStackDevtools
+        {import.meta.env.MODE !== 'tauri' && <TanStackDevtools
           config={{
             position: 'bottom-right',
           }}
@@ -67,7 +65,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               render: <TanStackRouterDevtoolsPanel />,
             },
           ]}
-        />
+        />}
         <Scripts />
       </body>
     </html>

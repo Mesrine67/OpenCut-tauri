@@ -58,12 +58,17 @@ proto use    # installs the tools pinned in .prototools
 ```sh
 moon run web:dev       # localhost:5173
 moon run api:dev       # localhost:8787
-moon run desktop:dev   # see apps/desktop/README.md
+moon run desktop-tauri-classic:dev # OpenCut Classic editor in Tauri 2
+moon run desktop-tauri-new:dev     # current rewrite frontend in Tauri 2
 ```
+
+The Classic desktop embeds the working Classic editor from a pinned upstream submodule. The New desktop bundles the rewrite's current web frontend as local assets, with no separately running web service in the installed app. The rewrite is still under construction, so its editor route remains a preview while upstream completes [tracking issue #811](https://github.com/OpenCut-app/OpenCut/issues/811).
+
+For native Windows prerequisites, Tauri plugin choices, separate development commands, and MSI/NSIS builds, see [TAURI_SETUP.md](TAURI_SETUP.md).
 
 ## Contributing
 
-We're not set up to take outside contributions yet while the architecture is being designed. If you want to follow along, ask questions, or just hang out, [join the Discord](https://discord.gg/zmR9N35cjK) or [open an issue](https://github.com/opencut-app/opencut/issues).
+Desktop-specific work for this fork belongs in [Mesrine67/OpenCut-tauri](https://github.com/Mesrine67/OpenCut-tauri). For the upstream web editor, use [OpenCut-app/OpenCut](https://github.com/OpenCut-app/OpenCut); its current repository only accepts pull requests from collaborators.
 
 ## Sponsors
 

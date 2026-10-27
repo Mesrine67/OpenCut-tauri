@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "OpenCut Classic",
+  "version": "0.1.0",
+  "identifier": "app.opencut.desktop.classic",
+  "build": {
+    "beforeDevCommand": "bun scripts/classic-desktop.mjs dev",
+    "devUrl": "http://127.0.0.1:14382/",
+    "beforeBuildCommand": "bun scripts/classic-desktop.mjs build",
+    "frontendDist": "loader"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "OpenCut Classic",
+        "width": 1440,
+        "height": 900,
+        "minWidth": 900,
+        "minHeight": 620,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' http://127.0.0.1:14382; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' http://127.0.0.1:14382; style-src 'self' 'unsafe-inline' http://127.0.0.1:14382; img-src 'self' asset: http://asset.localhost data: blob: http://127.0.0.1:14382; media-src 'self' asset: http://asset.localhost data: blob: http://127.0.0.1:14382; font-src 'self' data: http://127.0.0.1:14382; connect-src ipc: http://ipc.localhost http://127.0.0.1:14382"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "offlineInstaller"
+      }
+    },
+    "icon": ["icons/icon.ico"],
+    "category": "Video",
+    "shortDescription": "Open source video editor",
+    "resources": ["resources/bun.exe", "resources/classic-server/**/*"]
+  }
+}

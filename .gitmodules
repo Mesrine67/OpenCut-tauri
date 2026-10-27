@@ -1,0 +1,3 @@
+[submodule "apps/desktop-tauri/classic"]
+	path = apps/desktop-tauri/classic
+	url = https://github.com/opencut-app/opencut-classic.git

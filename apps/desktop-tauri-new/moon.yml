@@ -1,0 +1,15 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+language: 'javascript'
+layer: 'application'
+
+tasks:
+  dev:
+    command: 'bun run dev'
+    options:
+      runInCI: false
+
+  build:
+    command: 'bun run build'
+    options:
+      runInCI: false
