@@ -1,5 +1,9 @@
 node_modules/
+.bun-cache/
+.setup-cache/
+/apps/desktop-tauri/src-tauri/resources/
 dist/
+dist-tauri/
 target/
 .env
 .env.*

@@ -7,20 +7,28 @@
   },
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-23-14-55/ffmpeg-n8.1.3-win64-lgpl-shared-8.1.zip",
-      "sha256": "60a055792e88524db437a78c2fcd4471536abf3b30d34fae1249591c00e13432"
+      "url": "https://github.com/OpenCut-app/OpenCut/releases/download/ffmpeg-8.1.3-1/ffmpeg-8.1.3-windows-x86_64.tar.gz",
+      "sha256": "2402d3be3e84588938d80055cc7af75e7d6fc7734b4bd6b178fe5f6b82149b44"
     },
     "windows-aarch64": {
-      "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-23-14-55/ffmpeg-n8.1.3-winarm64-lgpl-shared-8.1.zip",
-      "sha256": "c6db6e038130559fca5ff838a3bfd7d8bcc364234dc85377c732350b2b201fea"
+      "url": "https://github.com/OpenCut-app/OpenCut/releases/download/ffmpeg-8.1.3-1/ffmpeg-8.1.3-windows-aarch64.tar.gz",
+      "sha256": "258d200f5d668367a755beb890800e1884027a9c3846ac541e63399d1ee01c2b"
     },
     "linux-x86_64": {
-      "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-23-14-55/ffmpeg-n8.1.3-linux64-lgpl-shared-8.1.tar.xz",
-      "sha256": "703d321cbdd00e8579c708cdd58eda223db266598c8200091bc525abca154cd6"
+      "url": "https://github.com/OpenCut-app/OpenCut/releases/download/ffmpeg-8.1.3-1/ffmpeg-8.1.3-linux-x86_64.tar.gz",
+      "sha256": "ca8647665fe34ea7928034575d949d77c20c433336c25d8139e5c3b77e60f100"
     },
     "linux-aarch64": {
-      "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-23-14-55/ffmpeg-n8.1.3-linuxarm64-lgpl-shared-8.1.tar.xz",
-      "sha256": "71386055106cb180e736ca027752771f32d1ee3cafec336a467d09a3c468be8b"
+      "url": "https://github.com/OpenCut-app/OpenCut/releases/download/ffmpeg-8.1.3-1/ffmpeg-8.1.3-linux-aarch64.tar.gz",
+      "sha256": "412ebf808a7e452a6a405f6003092a53e2cf66d20e70d237a80c584b976aaed6"
+    },
+    "macos-x86_64": {
+      "url": "https://github.com/OpenCut-app/OpenCut/releases/download/ffmpeg-8.1.3-1/ffmpeg-8.1.3-macos-x86_64.tar.gz",
+      "sha256": "9444b3b5a03fc3a820c55bd416aa5be5c640bdf7798255729802b8d2415a5ec1"
+    },
+    "macos-aarch64": {
+      "url": "https://github.com/OpenCut-app/OpenCut/releases/download/ffmpeg-8.1.3-1/ffmpeg-8.1.3-macos-aarch64.tar.gz",
+      "sha256": "e712ef87e42cf2b41d3a426e44a5118391925a62917ddd4477678aeaf6822636"
     }
   }
 }

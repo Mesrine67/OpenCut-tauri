@@ -30,3 +30,23 @@ tasks:
     options:
       cache: false
       runInCI: false
+
+  desktop-tauri-classic:dev:
+    command: 'bun run --cwd apps/desktop-tauri dev'
+    options:
+      runInCI: false
+
+  desktop-tauri-classic:build:
+    command: 'bun run --cwd apps/desktop-tauri build'
+    options:
+      runInCI: false
+
+  desktop-tauri-new:dev:
+    command: 'bun run --cwd apps/desktop-tauri-new dev'
+    options:
+      runInCI: false
+
+  desktop-tauri-new:build:
+    command: 'bun run --cwd apps/desktop-tauri-new build'
+    options:
+      runInCI: false
