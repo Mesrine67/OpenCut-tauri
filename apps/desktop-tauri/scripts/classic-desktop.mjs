@@ -340,6 +340,38 @@ async function applyClassicCompatibilityPatch() {
   }
 }
 
+const desktopCompatibilityFiles = [
+  'apps/web/src/components/landing/hero.tsx',
+  'apps/web/src/components/header.tsx',
+  'apps/web/src/env/web.ts',
+  'apps/web/src/app/api/auth/[...all]/route.ts',
+  'apps/web/src/app/api/feedback/route.ts',
+  'apps/web/src/app/api/sounds/search/route.ts',
+  'apps/web/src/app/layout.tsx',
+  'apps/web/src/components/editor/editor-header.tsx',
+  'apps/web/src/sounds/components/assets-view.tsx',
+  'apps/web/src/actions/keybinding.ts',
+  'apps/web/src/actions/definitions.ts',
+  'apps/web/next.config.ts',
+  'apps/web/src/services/storage/migrations/runner.ts',
+  'apps/web/src/services/storage/migrations/v1-to-v2.ts',
+  'apps/web/src/stickers/providers/index.ts',
+]
+
+async function withClassicDesktopCompatibility(action) {
+  const snapshots = await Promise.all(desktopCompatibilityFiles.map(async (path) => {
+    const absolutePath = resolve(classicRoot, path)
+    return [absolutePath, await readFile(absolutePath)]
+  }))
+
+  try {
+    await applyClassicCompatibilityPatch()
+    return await action()
+  } finally {
+    await Promise.all(snapshots.map(([path, contents]) => writeFile(path, contents)))
+  }
+}
+
 async function assertPortAvailable() {
   await new Promise((resolvePromise, reject) => {
     const server = createServer()
@@ -382,41 +414,43 @@ function run(args, options = {}) {
 
 const mode = process.argv[2]
 if (mode === 'dev') {
-  await applyClassicCompatibilityPatch()
-  await assertPortAvailable()
-  await prepareResourcePlaceholders()
-  await run(['run', 'next', 'dev', bundler, '--hostname', '127.0.0.1', '--port', port], { env: desktopEnv() })
+  await withClassicDesktopCompatibility(async () => {
+    await assertPortAvailable()
+    await prepareResourcePlaceholders()
+    await run(['run', 'next', 'dev', bundler, '--hostname', '127.0.0.1', '--port', port], { env: desktopEnv() })
+  })
 } else if (mode === 'build') {
-  await applyClassicCompatibilityPatch()
-  const env = {
-    ...desktopEnv(),
-    NODE_ENV: 'production',
-  }
-  await prepareResourcePlaceholders()
-  await run(['run', 'build'], { env })
+  await withClassicDesktopCompatibility(async () => {
+    const env = {
+      ...desktopEnv(),
+      NODE_ENV: 'production',
+    }
+    await prepareResourcePlaceholders()
+    await run(['run', 'build'], { env })
 
-  const standalone = resolve(classicWeb, '.next/standalone')
-  const server = resolve(resources, 'classic-server')
-  const loader = resolve(tauriRoot, 'loader')
-  const relativeEntry = ['apps/web/server.js', 'classic/apps/web/server.js', 'server.js']
-    .find((candidate) => existsSync(resolve(standalone, candidate)))
-  if (!relativeEntry) throw new Error(`Could not find Next standalone server.js in ${standalone}`)
+    const standalone = resolve(classicWeb, '.next/standalone')
+    const server = resolve(resources, 'classic-server')
+    const loader = resolve(tauriRoot, 'loader')
+    const relativeEntry = ['apps/web/server.js', 'classic/apps/web/server.js', 'server.js']
+      .find((candidate) => existsSync(resolve(standalone, candidate)))
+    if (!relativeEntry) throw new Error(`Could not find Next standalone server.js in ${standalone}`)
 
-  await rm(server, { recursive: true, force: true })
-  await mkdir(server, { recursive: true })
-  await copyStandaloneTree(standalone, server)
-  const serverDirectory = dirname(resolve(server, relativeEntry))
-  await cp(resolve(classicWeb, 'public'), resolve(serverDirectory, 'public'), { recursive: true })
-  await cp(resolve(classicWeb, '.next/static'), resolve(serverDirectory, '.next/static'), { recursive: true })
-  const tracedModules = resolve(standalone, 'node_modules/.bun/node_modules')
-  for (const name of await readdir(tracedModules)) {
-    await copyStandaloneTree(resolve(tracedModules, name), resolve(serverDirectory, 'node_modules', name), standalone)
-  }
-  await writeFile(resolve(server, 'desktop-start.cjs'), `const fs = require('node:fs');\nconst path = require('node:path');\nconst candidates = ['apps/web/server.js', 'classic/apps/web/server.js', 'server.js'];\nconst entry = candidates.map((relative) => path.resolve(__dirname, relative)).find(fs.existsSync);\nif (!entry) throw new Error('OpenCut standalone server.js is missing');\nprocess.chdir(path.dirname(entry));\nrequire(entry);\n`)
-  await mkdir(resolve(loader), { recursive: true })
-  await Bun.write(resolve(loader, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenCut</title></head><body style="font:16px system-ui;background:#111;color:#eee;display:grid;place-items:center;height:100vh"><p>Starting OpenCut…</p></body></html>')
+    await rm(server, { recursive: true, force: true })
+    await mkdir(server, { recursive: true })
+    await copyStandaloneTree(standalone, server)
+    const serverDirectory = dirname(resolve(server, relativeEntry))
+    await cp(resolve(classicWeb, 'public'), resolve(serverDirectory, 'public'), { recursive: true })
+    await cp(resolve(classicWeb, '.next/static'), resolve(serverDirectory, '.next/static'), { recursive: true })
+    const tracedModules = resolve(standalone, 'node_modules/.bun/node_modules')
+    for (const name of await readdir(tracedModules)) {
+      await copyStandaloneTree(resolve(tracedModules, name), resolve(serverDirectory, 'node_modules', name), standalone)
+    }
+    await writeFile(resolve(server, 'desktop-start.cjs'), `const fs = require('node:fs');\nconst path = require('node:path');\nconst candidates = ['apps/web/server.js', 'classic/apps/web/server.js', 'server.js'];\nconst entry = candidates.map((relative) => path.resolve(__dirname, relative)).find(fs.existsSync);\nif (!entry) throw new Error('OpenCut standalone server.js is missing');\nprocess.chdir(path.dirname(entry));\nrequire(entry);\n`)
+    await mkdir(resolve(loader), { recursive: true })
+    await Bun.write(resolve(loader, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenCut</title></head><body style="font:16px system-ui;background:#111;color:#eee;display:grid;place-items:center;height:100vh"><p>Starting OpenCut…</p></body></html>')
 
-  await cp(bunSource, resolve(resources, 'bun.exe'))
+    await cp(bunSource, resolve(resources, 'bun.exe'))
+  })
 } else {
   throw new Error('Usage: bun scripts/classic-desktop.mjs <dev|build>')
 }
